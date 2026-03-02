@@ -11,51 +11,21 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <limits.h>
-#ifndef __LIBRETRO__
 #include <memory.h>
-#endif
 #include <time.h>
 #include <string.h>
-#ifdef HAVE_STRINGS_H
 #include <strings.h>
-#endif
 #include <sys/types.h>
 
-#ifdef __WIN32__
-#define NOMINMAX 1
-#include <windows.h>
-#endif
-
-#ifdef __WIN32__
-//#define RIGHTSHIFT_IS_SAR
-#define RIGHTSHIFT_int8_IS_SAR
-#define RIGHTSHIFT_int16_IS_SAR
-#define RIGHTSHIFT_int32_IS_SAR
-#ifndef __LIBRETRO__
-
-#endif //__LIBRETRO__
-#endif
-
-#ifdef __MACOSX__
-#define PIXEL_FORMAT RGB555
-#endif
-
-#ifndef PIXEL_FORMAT
 #define PIXEL_FORMAT RGB565
-#endif
 
-#if defined(__GNUC__)
 #define alwaysinline  inline __attribute__((always_inline))
-#elif defined(_MSC_VER)
-#define alwaysinline  __forceinline
-#else
-#define alwaysinline  inline
-#endif
 
 #ifndef snes9x_types_defined
 #define snes9x_types_defined
+
 typedef unsigned char		bool8;
-#ifdef HAVE_STDINT_H
+
 #include <stdint.h>
 typedef intptr_t			pint;
 typedef int8_t				int8;
@@ -66,43 +36,12 @@ typedef int32_t				int32;
 typedef uint32_t			uint32;
 typedef int64_t				int64;
 typedef uint64_t			uint64;
-#else	// HAVE_STDINT_H
-#ifdef __WIN32__
-typedef intptr_t			pint;
-typedef signed char			int8;
-typedef unsigned char		uint8;
-typedef signed short		int16;
-typedef unsigned short		uint16;
-typedef signed int     		int32;
-typedef unsigned int		uint32;
-typedef signed __int64		int64;
-typedef unsigned __int64	uint64;
-typedef int8                int8_t;
-typedef uint8       		uint8_t;
-typedef int16       		int16_t;
-typedef uint16      		uint16_t;
-typedef int32		    	int32_t;
-typedef uint32      		uint32_t;
-typedef int64               int64_t;
-typedef uint64              uint64_t;
-typedef int					socklen_t;
-#else	// __WIN32__
-typedef signed char			int8;
-typedef unsigned char		uint8;
-typedef signed short		int16;
-typedef unsigned short		uint16;
-typedef signed int			int32;
-typedef unsigned int		uint32;
-#ifdef __GNUC__
+
 // long long is not part of ISO C++ 
 __extension__
-#endif
 typedef long long			int64;
 typedef unsigned long long	uint64;
 typedef size_t				pint;
-#endif	//  __WIN32__
-#endif	// HAVE_STDINT_H
-#endif	// snes9x_types_defined
 
 #ifndef TRUE
 #define TRUE	1
@@ -111,47 +50,21 @@ typedef size_t				pint;
 #define FALSE	0
 #endif
 
-#ifndef __WIN32__
-#ifndef PATH_MAX
-#define PATH_MAX        1024
-#endif
-#else
 #ifndef PATH_MAX
 #define PATH_MAX        _MAX_PATH
-#endif
 #endif
 
 #include "fscompat.h"
 
 #define S9xDisplayString	DisplayStringFromBottom
-#ifdef __WIN32__
-#if !defined(SNES9X_QT) && !defined(__LIBRETRO__)
-void SetInfoDlgColor(unsigned char, unsigned char, unsigned char);
-#define SET_UI_COLOR(r,g,b) SetInfoDlgColor(r,g,b)
-#endif
-#ifndef snprintf
-   #define snprintf _snprintf
-#endif
-#ifndef strcasecmp
-   #define strcasecmp	stricmp
-#endif
-#ifndef strncasecmp
-   #define strncasecmp	strnicmp
-#endif
-#endif  // __WIN32__
-
-#if defined(__DJGPP) || defined(__WIN32__)
-#define SLASH_STR	"\\"
-#define SLASH_CHAR	'\\'
-#else
 #define SLASH_STR	"/"
 #define SLASH_CHAR	'/'
-#endif
 
 #ifndef TITLE
-#define TITLE "Snes9x"
+#define TITLE "Snes9x-psp"
 #endif
 
+// TODO: specify
 #if defined(__i386__) || defined(__i486__) || defined(__i586__) || defined(__i686__) || defined(__x86_64__) || defined(__alpha__) || defined(__MIPSEL__) || defined(_M_IX86) || defined(_M_X64) || defined(_XBOX1) || defined(__arm__) || defined(ANDROID) || defined(__aarch64__) || (defined(__BYTE_ORDER__) && __BYTE_ORDER == __ORDER_LITTLE_ENDIAN__)
 #define LSB_FIRST
 #define FAST_LSB_WORD_ACCESS
