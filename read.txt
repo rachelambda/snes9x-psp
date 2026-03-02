@@ -1,2 +1,2 @@
-https://github.com/rachelambda/snes9x-psp/tree/master/docs
-https://html-preview.github.io/?url=https://github.com/rachelambda/snes9x-psp/blob/master/docs/porting.html
+https://html-preview.github.io/?url=https://github.com/snes9xgit/snes9x/blob/master/docs/porting.html
+https://github.com/snes9xgit/snes9x

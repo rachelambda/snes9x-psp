@@ -23,6 +23,7 @@
 
 #ifndef snes9x_types_defined
 #define snes9x_types_defined
+#endif
 
 typedef unsigned char		bool8;
 
@@ -36,12 +37,6 @@ typedef int32_t				int32;
 typedef uint32_t			uint32;
 typedef int64_t				int64;
 typedef uint64_t			uint64;
-
-// long long is not part of ISO C++ 
-__extension__
-typedef long long			int64;
-typedef unsigned long long	uint64;
-typedef size_t				pint;
 
 #ifndef TRUE
 #define TRUE	1

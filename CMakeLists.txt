@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.11)
 
 project(snes9x-psp)
 
-add_executable(${PROJECT_NAME} src/main.c)
+add_executable(${PROJECT_NAME} src/main.cpp)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
     pspgu

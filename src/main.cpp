@@ -4,6 +4,8 @@
 #include <pspgu.h>
 #include <pspdisplay.h>
 
+#include "snes9x.h"
+
 PSP_MODULE_INFO("snes9x-psp", 0, 1, 0);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_VFPU | THREAD_ATTR_USER);
 
@@ -82,6 +84,22 @@ int main() {
 
     // Setup the library used for rendering
     initGu();
+
+    memset(&Settings, 0, sizeof(Settings));
+    Settings.MouseMaster = true;
+    Settings.SuperScopeMaster = true;
+    Settings.JustifierMaster = true;
+    Settings.MultiPlayer5Master = true;
+    Settings.FrameTimePAL = 20000;
+    Settings.FrameTimeNTSC = 16667;
+    Settings.SoundPlaybackRate = 32040;
+    Settings.SoundInputRate = 31947;
+    Settings.SupportHiRes = false;
+    Settings.Transparency = true;
+    Settings.AutoDisplayMessages = true;
+    Settings.InitialInfoStringTimeout = 120;
+    Settings.HDMATimingHack = 100;
+    Settings.BlockInvalidVRAMAccessMaster = true;
 
     int resx = 256;
     int bufw = 256;
