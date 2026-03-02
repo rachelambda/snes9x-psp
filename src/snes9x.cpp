@@ -234,7 +234,6 @@ void S9xLoadConfigFiles (char **argv, int argc)
 	Settings.InterpolationMethod        =  conf.GetInt ("Sound::InterpolationMethod",          2);
 
 	// Display
-
 	Settings.Transparency               =  conf.GetBool("Display::Transparency",               true);
 	Settings.DisableGraphicWindows      = !conf.GetBool("Display::GraphicWindows",             true);
 	Settings.DisplayTime				=  conf.GetBool("Display::DisplayTime",                false);

@@ -94,7 +94,6 @@ int main() {
     Settings.FrameTimeNTSC = 16667;
     Settings.SoundPlaybackRate = 32040;
     Settings.SoundInputRate = 31947;
-    Settings.SupportHiRes = false;
     Settings.Transparency = true;
     Settings.AutoDisplayMessages = true;
     Settings.InitialInfoStringTimeout = 120;
