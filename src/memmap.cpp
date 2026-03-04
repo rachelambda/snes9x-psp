@@ -11,13 +11,6 @@
 #include <assert.h>
 
 #include "snes9x.h"
-#ifdef UNZIP_SUPPORT
-#  ifdef SYSTEM_ZIP
-#    include <minizip/unzip.h>
-#  else
-#    include "unzip/unzip.h"
-#  endif
-#endif
 
 #ifdef JMA_SUPPORT
 #include "jma/s9x-jma.h"

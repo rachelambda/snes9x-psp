@@ -503,3 +503,4 @@ MigrationBackup/
 .DS_Store
 *.lock
 profile
+rom.sfc

@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include <pspuser.h>
 #include <pspgu.h>
@@ -21,12 +22,8 @@ PSP_MAIN_THREAD_ATTR(THREAD_ATTR_VFPU | THREAD_ATTR_USER);
 #define SCREEN_HEIGHT BUFFER_HEIGHT
 #define END_OFFSET 0x4000000
 
-#define MAX_BUF 256
-#define MAX_X 256
-#define MAX_Y 239
-
 char list[0x20000] __attribute__((aligned(64)));
-int running;
+int running = 1;
 
 void* framebuffer = (void*)0x88000;
 void* drawbuffer = (void*)0x0;
@@ -36,11 +33,7 @@ void initGu(){
     sceGuInit();
 
     sceGuStart(GU_DIRECT, list);
-    sceGuDrawBuffer(GU_PSM_5650,drawbuffer,BUFFER_WIDTH);
     sceGuDispBuffer(SCREEN_WIDTH,SCREEN_HEIGHT,framebuffer,BUFFER_WIDTH);
-
-    sceGuDepthBuffer(framebuffer, 0); // Set depth buffer to a length of 0
-    sceGuDisable(GU_DEPTH_TEST); // Disable depth testing
 
     sceGuOffset(2048 - (SCREEN_WIDTH / 2), 2048 - (SCREEN_HEIGHT / 2));
     sceGuViewport(2048, 2048, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -64,7 +57,6 @@ void endFrame(){
     sceGuFinish();
     sceGuSync(GU_SYNC_FINISH, GU_SYNC_DONE);
     sceDisplayWaitVblankStart();
-    drawbuffer = sceGuSwapBuffers();
 }
 
 int exit_callback(int arg1, int arg2, void *common) {
@@ -82,11 +74,11 @@ void S9xExit(void) {
 
 bool8 S9xOpenSoundDevice() {
   // TODO
-  return FALSE;
+  return TRUE;
 }
 
 bool8 S9xOpenSnapshotFile (const char* path, bool8 readonly, STREAM* stream) {
-  return FALSE;
+  return TRUE;
 }
 
 std::string S9xGetFilenameInc (std::string, enum s9x_getdirtype) {
@@ -95,6 +87,10 @@ std::string S9xGetFilenameInc (std::string, enum s9x_getdirtype) {
 
 std::string S9xGetDirectory (enum s9x_getdirtype type) {
   return "TODO";
+}
+
+void S9xCloseSnapshotFile(STREAM file) {
+  // TODO
 }
 
 bool8 S9xInitUpdate() {
@@ -107,8 +103,8 @@ bool8 S9xContinueUpdate(int resx, int resy) {
 
 bool8 S9xDeinitUpdate(int resx, int resy) {
   sceGuCopyImage(GU_PSM_5650, 
-      0, 0, resx, resy, MAX_BUF, GFX.Screen, 
-      (SCREEN_WIDTH - resx) / 2, (SCREEN_HEIGHT - resy) / 2, BUFFER_WIDTH, (void*)((pint)drawbuffer+END_OFFSET));
+      0, 0, resx, resy, GFX.Pitch, GFX.Screen, 
+      (SCREEN_WIDTH - resx) / 2, (SCREEN_HEIGHT - resy) / 2, BUFFER_WIDTH, (void*)((pint)framebuffer+END_OFFSET));
   return TRUE;
 }
 
@@ -118,15 +114,6 @@ void S9xMessage(int type, int number, const char* message) {
 
 const char* S9xStringInput(const char *msg) {
   return NULL;
-}
-
-bool8 S9xOpenSnapshotFile(const char *filepath, bool8 read_only, STREAM file) {
-  // TODO
-  return FALSE;
-}
-
-void S9xCloseSnapshotFile(STREAM file) {
-  // TODO
 }
 
 void S9xAutoSaveSRAM(void) {
@@ -143,17 +130,17 @@ void S9xToggleSoundChannel(int c) {
 
 bool S9xPollButton (uint32 id, bool* pressed) {
   // TODO
-  return false;
+  return true;
 }
 
 bool S9xPollPointer (uint32 id, int16 *x, int16 *y) {
   // TODO
-  return false;
+  return true;
 }
 
 bool S9xPollAxis (uint32 id, int16 *value) {
   // TODO
-  return false;
+  return true;
 }
 
 void S9xHandlePortCommand (s9xcommand_t cmd, int16 data1, int16 data2) {
@@ -182,9 +169,7 @@ int main() {
     // Setup the library used for rendering
     initGu();
     
-    pspDebugScreenInitEx(framebuffer, GU_PSM_5650, 0);
-
-    Memory.Init();
+    pspDebugScreenInitEx((void*)((pint)framebuffer+END_OFFSET), PSP_DISPLAY_PIXEL_FORMAT_565, 1);
 
     memset(&Settings, 0, sizeof(Settings));
     Settings.MouseMaster = true;
@@ -201,9 +186,8 @@ int main() {
     Settings.HDMATimingHack = 100;
     Settings.BlockInvalidVRAMAccessMaster = true;
 
-
     // max screen size used by snes9x
-    const uint screenSize = 2*MAX_BUF*MAX_Y;
+    const uint screenSize = sizeof(uint16)*MAX_SNES_HEIGHT*GFX.Pitch;
     GFX.Screen = (uint16*)malloc(screenSize);
 
     memset(GFX.Screen, 0xFF, screenSize);
@@ -211,17 +195,25 @@ int main() {
     S9xGraphicsInit();
     S9xInitAPU();
     S9xInitSound(0);
+    Memory.Init();
 
-    running = 1;
+    const char* path = "ms0:/rom.sfc";
+    if(!Memory.LoadROM(path)) {
+      pspDebugScreenPrintf("couldnt load rom\n");
+      S9xExit();
+      running = 0;
+    }
+
     while(running){
-        startFrame();
+      startFrame();
 
-        // TODO: update controls
 
-        // main loop
-        S9xMainLoop();
+      // TODO: update controls
 
-        endFrame();
+      // main loop
+      S9xMainLoop();
+
+      endFrame();
     }
 
     return 0;

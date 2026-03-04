@@ -15,19 +15,6 @@
 #include "65c816.h"
 #include "messages.h"
 
-#ifdef ZLIB
-#include <zlib.h>
-#define FSTREAM					gzFile
-#define READ_FSTREAM(p, l, s)	gzread(s, p, l)
-#define WRITE_FSTREAM(p, l, s)	gzwrite(s, p, l)
-#define GETS_FSTREAM(p, l, s)	gzgets(s, p, l)
-#define GETC_FSTREAM(s)			gzgetc(s)
-#define OPEN_FSTREAM(f, m)		gzopen(f, m)
-#define REOPEN_FSTREAM(f, m)		gzdopen(f, m)
-#define FIND_FSTREAM(f)			gztell(f)
-#define REVERT_FSTREAM(s, o, p)	gzseek(s, o, p)
-#define CLOSE_FSTREAM(s)			gzclose(s)
-#else
 #define FSTREAM					FILE *
 #define READ_FSTREAM(p, l, s)	fread(p, 1, l, s)
 #define WRITE_FSTREAM(p, l, s)	fwrite(p, 1, l, s)
@@ -38,7 +25,6 @@
 #define FIND_FSTREAM(s)			ftell(s)
 #define REVERT_FSTREAM(s, o, p)	fseek(s, o, p)
 #define CLOSE_FSTREAM(s)			fclose(s)
-#endif
 
 #include "stream.h"
 

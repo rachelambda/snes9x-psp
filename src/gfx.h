@@ -12,9 +12,9 @@
 
 struct SGFX
 {
-	const uint32 Pitch = sizeof(uint16) * SNES_WIDTH;
-	const uint32 RealPPL = SNES_WIDTH; // true PPL of Screen buffer
-	const uint32 ScreenSize = SNES_WIDTH * SNES_HEIGHT_EXTENDED;
+	const uint32 Pitch = 512; // 256 wide 16 bit color
+	const uint32 RealPPL = MAX_SNES_WIDTH; // true PPL of Screen buffer
+	const uint32 ScreenSize = SNES_WIDTH * SNES_HEIGHT;
 	std::vector<uint16> ScreenBuffer;
 	uint16	*Screen;
 	uint16	*SubScreen;
