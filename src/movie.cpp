@@ -20,14 +20,6 @@
 #include "netplay.h"
 #endif
 
-#ifdef __WIN32__
-#include <io.h>
-#ifndef W_OK
-#define W_OK 2
-#endif
-#define ftruncate chsize
-#endif
-
 #define SMV_MAGIC				0x1a564d53 // SMV0x1a
 #define SMV_VERSION				5
 #define SMV_HEADER_SIZE			64
@@ -377,9 +369,6 @@ static void truncate_movie (void)
 
 	if (Movie.SaveStateOffset > Movie.ControllerDataOffset)
 		return;
-
-	if (ftruncate(fileno(Movie.File), Movie.ControllerDataOffset + Movie.BytesPerSample * (Movie.MaxSample + 1)))
-		printf ("Couldn't truncate file.\n");
 }
 
 static int read_movie_header (FILE *fd, SMovie *movie)

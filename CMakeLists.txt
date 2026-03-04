@@ -22,7 +22,6 @@ add_executable(${PROJECT_NAME}
   src/movie.cpp
   src/conffile.cpp
   src/sa1.cpp
-  src/snes9x.cpp
   src/tileimpl-h2x1.cpp
   src/bsx.cpp
   src/c4.cpp
@@ -92,12 +91,6 @@ add_executable(${PROJECT_NAME}
   src/apu/apu.cpp
   src/tileimpl-n2x1.cpp
   src/dsp4.cpp
-  src/filter/hq2x.cpp
-  src/filter/epx.cpp
-  src/filter/sharpbilinear_flexible.cpp
-  src/filter/2xsai.cpp
-  src/filter/blit.cpp
-  src/filter/xbrz.cpp
   src/screenshot.cpp
 )
 
@@ -105,6 +98,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     pspgu
     pspge
     pspdisplay
+    pspdebug
     ${SDL2_LIBRARIES}
     ${SDL2_MIXER_LIBRARIES}
 )
